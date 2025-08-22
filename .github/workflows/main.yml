@@ -18,7 +18,7 @@ jobs:
         pip install cython
         pip install kivy
     - name: Set up Android SDK
-      uses: actions/setup-android@v2
+      uses: android-actions/setup-android@v2
       with:
         api-level: 33
         build-tools: '33.0.0'
@@ -49,15 +49,15 @@ jobs:
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
         # Crear buildozer.spec con expansión de variables
         cat > $HOME/.buildozer/android/platform/buildozer.spec << EOF
-        [app]
-        title = My Application
+[app]
+title = My Application
 
-        [buildozer]
-        android.skip_sdk_update_on_install = 1
-        android.sdk_path = $ANDROIDSDK
-        android.ndk_path = $ANDROIDNDK
-        android.use_cmdlinetools = 1
-        EOF
+[buildozer]
+android.skip_sdk_update_on_install = 1
+android.sdk_path = $ANDROIDSDK
+android.ndk_path = $ANDROIDNDK
+android.use_cmdlinetools = 1
+EOF
         # Verificar que el archivo se creó correctamente
         if [ -f "$HOME/.buildozer/android/platform/buildozer.spec" ]; then
           echo "buildozer.spec created successfully"
