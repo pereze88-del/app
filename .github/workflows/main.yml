@@ -49,10 +49,17 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
-        # Configurar Buildozer para usar cmdline-tools y evitar tools/bin
-        echo "android.sdk_path = $ANDROIDSDK" > $HOME/.buildozer/android/platform/buildozer.spec
-        echo "android.ndk_path = $ANDROIDNDK" >> $HOME/.buildozer/android/platform/buildozer.spec
-        echo "android.use_cmdlinetools = 1" >> $HOME/.buildozer/android/platform/buildozer.spec
+        # Configurar Buildozer para usar cmdline-tools y evitar actualización automática
+        cat << EOF > $HOME/.buildozer/android/platform/buildozer.spec
+[app]
+title = My Application
+
+[buildozer]
+android.skip_sdk_update_on_install = 1
+android.sdk_path = $ANDROIDSDK
+android.ndk_path = $ANDROIDNDK
+android.use_cmdlinetools = 1
+EOF
     - name: Build APK
       run: |
         buildozer android debug
