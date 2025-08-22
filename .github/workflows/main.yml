@@ -26,13 +26,15 @@ jobs:
         sdk: 'commandlinetools'
     - name: Install SDK components
       run: |
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.0" "platform-tools" "platforms;android-33"
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "tools"
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;33.0.0" "platform-tools" "platforms;android-33"
     - name: Configure SDK for Buildozer
       run: |
-        mkdir -p $HOME/.buildozer/android/platform/android-sdk
-        cp -r $ANDROID_HOME/* $HOME/.buildozer/android/platform/android-sdk/
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
+        cp -r $ANDROID_HOME/cmdline-tools/latest/* $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
+        cp -r $ANDROID_HOME/build-tools/33.0.0 $HOME/.buildozer/android/platform/android-sdk/build-tools/
+        cp -r $ANDROID_HOME/platform-tools $HOME/.buildozer/android/platform/android-sdk/platform-tools/
+        cp -r $ANDROID_HOME/platforms/android-33 $HOME/.buildozer/android/platform/android-sdk/platforms/
+        cp -r $ANDROID_HOME/ndk/29.0.13846066 $HOME/.buildozer/android/platform/android-sdk/ndk/
         export ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
