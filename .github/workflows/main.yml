@@ -28,14 +28,15 @@ jobs:
       run: |
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.0" "platform-tools" "platforms;android-33"
-    - name: Configure SDK for Buildozer
+    - name: Configure Buildozer SDK
       run: |
-        mkdir -p $HOME/.buildozer/android/platform/android-sdk
-        cp -r $ANDROID_HOME/* $HOME/.buildozer/android/platform/android-sdk/
-        export ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk
-        export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
-        echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
-        echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
+        # Crear la estructura de directorios esperada por Buildozer
+        mkdir -p $HOME/.buildozer/android/platform
+        # Copiar todo el SDK a la ubicación de Buildozer
+        cp -r $ANDROID_HOME $HOME/.buildozer/android/platform/android-sdk
+        # Establecer variables de entorno
+        echo "ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
+        echo "ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066" >> $GITHUB_ENV
     - name: Build APK
       run: |
         buildozer android debug
