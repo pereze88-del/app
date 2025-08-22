@@ -22,7 +22,7 @@ jobs:
       with:
         api-level: 33
         build-tools: '33.0.0'
-        ndk: '29.0.13846066'  # Intentaremos esta versión, pero verificaremos
+        ndk: '29.0.13846066'
         sdk: 'commandlinetools'
     - name: Install SDK components
       run: |
@@ -49,6 +49,9 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
+        # Configurar Buildozer para usar cmdline-tools
+        echo "export ANDROIDSDK=$ANDROIDSDK" > $HOME/.buildozer/android/platform/android-sdk/buildozer.spec
+        echo "export ANDROIDNDK=$ANDROIDNDK" >> $HOME/.buildozer/android/platform/android-sdk/buildozer.spec
     - name: Build APK
       run: |
         buildozer android debug
