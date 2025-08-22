@@ -17,10 +17,16 @@ jobs:
         pip install buildozer
         pip install cython
         pip install kivy
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: 33
+        build-tools: '33.0.0'
+        ndk: '29.0.13846066'  # Asegúrate de que coincida con tu versión NDK
     - name: Build APK
       run: |
-        export ANDROIDSDK=$HOME/android-sdk
-        export ANDROIDNDK=$HOME/android-sdk/ndk-bundle
+        export ANDROIDSDK=$ANDROID_HOME
+        export ANDROIDNDK=$ANDROID_HOME/ndk/29.0.13846066
         buildozer android debug
     - name: Upload APK
       uses: actions/upload-artifact@v4
