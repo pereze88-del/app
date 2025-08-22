@@ -23,7 +23,7 @@ jobs:
         export ANDROIDNDK=$HOME/android-sdk/ndk-bundle
         buildozer android debug
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: apk
         path: bin/carpetaapp-*.apk
