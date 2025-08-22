@@ -22,11 +22,18 @@ jobs:
       with:
         api-level: 33
         build-tools: '33.0.0'
-        ndk: '29.0.13846066'  # Asegúrate de que coincida con tu versión NDK
+        ndk: '29.0.13846066'  # Coincide con tu versión NDK
+        sdk: 'commandlinetools'  # Instala las herramientas de línea de comandos
+    - name: Configure SDK for Buildozer
+      run: |
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk
+        cp -r $ANDROID_HOME/* $HOME/.buildozer/android/platform/android-sdk/
+        export ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk
+        export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
+        echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
+        echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
     - name: Build APK
       run: |
-        export ANDROIDSDK=$ANDROID_HOME
-        export ANDROIDNDK=$ANDROID_HOME/ndk/29.0.13846066
         buildozer android debug
     - name: Upload APK
       uses: actions/upload-artifact@v4
