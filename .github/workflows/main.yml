@@ -18,7 +18,7 @@ jobs:
         pip install cython
         pip install kivy
     - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
+      uses: actions/setup-android@v2
       with:
         api-level: 33
         build-tools: '33.0.0'
@@ -27,7 +27,6 @@ jobs:
     - name: Install SDK components
       run: |
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;33.0.0" "platform-tools" "platforms;android-33"
-        # Verificar e instalar NDK si no está disponible
         if [ ! -d "$ANDROID_HOME/ndk/29.0.13846066" ]; then
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "ndk;29.0.13846066"
         fi
@@ -38,7 +37,6 @@ jobs:
         cp -r $ANDROID_HOME/build-tools/33.0.0 $HOME/.buildozer/android/platform/android-sdk/build-tools/
         cp -r $ANDROID_HOME/platform-tools $HOME/.buildozer/android/platform/android-sdk/platform-tools/
         cp -r $ANDROID_HOME/platforms/android-33 $HOME/.buildozer/android/platform/android-sdk/platforms/
-        # Copiar el NDK disponible
         if [ -d "$ANDROID_HOME/ndk/29.0.13846066" ]; then
           cp -r $ANDROID_HOME/ndk/29.0.13846066 $HOME/.buildozer/android/platform/android-sdk/ndk/
         else
@@ -49,17 +47,25 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
-        # Configurar Buildozer con sintaxis YAML válida
-        cat > $HOME/.buildozer/android/platform/buildozer.spec << 'EOF'
-[app]
-title = My Application
+        # Crear buildozer.spec con expansión de variables
+        cat > $HOME/.buildozer/android/platform/buildozer.spec << EOF
+        [app]
+        title = My Application
 
-[buildozer]
-android.skip_sdk_update_on_install = 1
-android.sdk_path = $ANDROIDSDK
-android.ndk_path = $ANDROIDNDK
-android.use_cmdlinetools = 1
-EOF
+        [buildozer]
+        android.skip_sdk_update_on_install = 1
+        android.sdk_path = $ANDROIDSDK
+        android.ndk_path = $ANDROIDNDK
+        android.use_cmdlinetools = 1
+        EOF
+        # Verificar que el archivo se creó correctamente
+        if [ -f "$HOME/.buildozer/android/platform/buildozer.spec" ]; then
+          echo "buildozer.spec created successfully"
+          cat $HOME/.buildozer/android/platform/buildozer.spec
+        else
+          echo "Error: buildozer.spec was not created"
+          exit 1
+        fi
     - name: Build APK
       run: |
         buildozer android debug
