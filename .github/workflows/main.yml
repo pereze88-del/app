@@ -49,8 +49,8 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
-        # Configurar Buildozer para usar cmdline-tools y evitar actualización automática
-        cat << EOF > $HOME/.buildozer/android/platform/buildozer.spec
+        # Configurar Buildozer con sintaxis YAML válida
+        cat > $HOME/.buildozer/android/platform/buildozer.spec << 'EOF'
 [app]
 title = My Application
 
