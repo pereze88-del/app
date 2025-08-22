@@ -47,17 +47,17 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-sdk/ndk/29.0.13846066
         echo "ANDROIDSDK=$ANDROIDSDK" >> $GITHUB_ENV
         echo "ANDROIDNDK=$ANDROIDNDK" >> $GITHUB_ENV
-        # Crear buildozer.spec con expansión de variables
-        cat > $HOME/.buildozer/android/platform/buildozer.spec << EOF
-[app]
-title = My Application
+        # Crear buildozer.spec con indentación adecuada usando <<- para ignorar indentación inicial
+        cat > $HOME/.buildozer/android/platform/buildozer.spec <<- EOF
+          [app]
+            title = My Application
 
-[buildozer]
-android.skip_sdk_update_on_install = 1
-android.sdk_path = $ANDROIDSDK
-android.ndk_path = $ANDROIDNDK
-android.use_cmdlinetools = 1
-EOF
+          [buildozer]
+            android.skip_sdk_update_on_install = 1
+            android.sdk_path = $ANDROIDSDK
+            android.ndk_path = $ANDROIDNDK
+            android.use_cmdlinetools = 1
+        EOF
         # Verificar que el archivo se creó correctamente
         if [ -f "$HOME/.buildozer/android/platform/buildozer.spec" ]; then
           echo "buildozer.spec created successfully"
